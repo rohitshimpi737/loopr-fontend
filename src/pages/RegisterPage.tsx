@@ -23,6 +23,7 @@ import { useNavigate, Link as RouterLink } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import { useAlert } from '../contexts/AlertContext';
 import * as authService from '../services/authService';
+import ProjectInfo from '../components/ProjectInfo';
 
 const RegisterPage: React.FC = () => {
   const [formData, setFormData] = useState({
@@ -265,6 +266,7 @@ const RegisterPage: React.FC = () => {
         </Card>
       </Box>
     </Container>
+    <ProjectInfo />
     </Box>
   );
 };

@@ -49,14 +49,10 @@ import type {
   PaginatedResponse,
   ExportPreview
 } from '../types';
-import {
-  getDashboardSummary,
-  getTransactions,
-  exportTransactionsCSV,
-  getExportPreview,
-  getUniqueUsers
-} from '../services/apiService';
+import * as apiService from '../services/apiService';
 import { useAlert } from '../contexts/AlertContext';
+import DeveloperFooter from '../components/DeveloperFooter';
+import DeveloperBanner from '../components/DeveloperBanner';
 
 interface StatCardProps {
   title: string;
@@ -176,7 +172,7 @@ const DashboardPage: React.FC = () => {
   useEffect(() => {
     const fetchUsers = async () => {
       try {
-        const users = await getUniqueUsers();
+        const users = await apiService.getUniqueUsers();
         setUsers(users || []);
       } catch (error) {
         // Error fetching users - silently fail
@@ -190,7 +186,7 @@ const DashboardPage: React.FC = () => {
     const fetchDashboardData = async () => {
       try {
         setLoading(true);
-        const data = await getDashboardSummary();
+        const data = await apiService.getDashboardSummary();
         setSummary(data);
         setError('');
       } catch (err: any) {
@@ -208,7 +204,7 @@ const DashboardPage: React.FC = () => {
   const fetchTransactions = useCallback(async () => {
     try {
       setTransactionsLoading(true);
-      const data = await getTransactions(filters);
+      const data = await apiService.getTransactions(filters);
       setTransactions(data);
     } catch (err: any) {
       showAlert(err.message, 'error');
@@ -271,7 +267,7 @@ const DashboardPage: React.FC = () => {
 
   const handleExport = async () => {
     try {
-      const preview = await getExportPreview(filters);
+      const preview = await apiService.getExportPreview(filters);
       setExportPreview(preview);
       setExportDialogOpen(true);
     } catch (err: any) {
@@ -281,7 +277,7 @@ const DashboardPage: React.FC = () => {
 
   const confirmExport = async () => {
     try {
-      const blob = await exportTransactionsCSV(filters, selectedColumns);
+      const blob = await apiService.exportTransactionsCSV(filters, selectedColumns);
       const url = window.URL.createObjectURL(blob);
       const link = document.createElement('a');
       link.href = url;
@@ -1382,6 +1378,9 @@ const DashboardPage: React.FC = () => {
           </Button>
         </DialogActions>
       </Dialog>
+
+      <DeveloperFooter />
+      <DeveloperBanner />
     </Box>
   );
 };
